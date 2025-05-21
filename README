@@ -1,51 +1,108 @@
-NOTE: we have stopped maintaining the x86 version of xv6, and switched
-our efforts to the RISC-V version
-(https://github.com/mit-pdos/xv6-riscv.git)
+# SpinOS
 
-xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
-Version 6 (v6).  xv6 loosely follows the structure and style of v6,
-but is implemented for a modern x86-based multiprocessor using ANSI C.
+**SpinOS** is an experimental **monolithic C++ kernel** based on the [MIT xv6 operating system](https://pdos.csail.mit.edu/6.828/2023/xv6.html). It is intended for research, education, and exploration into modernizing low-level OS code using C++ while maintaining a minimalist, UNIX-like architecture.
 
-ACKNOWLEDGMENTS
+> ⚙️ Built on xv6. Reimagined in C++.
 
-xv6 is inspired by John Lions's Commentary on UNIX 6th Edition (Peer
-to Peer Communications; ISBN: 1-57398-013-7; 1st edition (June 14,
-2000)). See also https://pdos.csail.mit.edu/6.828/, which
-provides pointers to on-line resources for v6.
+---
 
-xv6 borrows code from the following sources:
-    JOS (asm.h, elf.h, mmu.h, bootasm.S, ide.c, console.c, and others)
-    Plan 9 (entryother.S, mp.h, mp.c, lapic.c)
-    FreeBSD (ioapic.c)
-    NetBSD (console.c)
+## 🚀 Project Goals
 
-The following people have made contributions: Russ Cox (context switching,
-locking), Cliff Frey (MP), Xiao Yu (MP), Nickolai Zeldovich, and Austin
-Clements.
+- ✨ Port core components of xv6 from C to C++
+- 🧵 Maintain xv6’s simplicity while exploring C++ idioms
+- 🧪 Serve as a testbed for experimental kernel development
+- 📚 Provide a readable codebase for learning OS internals in C++
 
-We are also grateful for the bug reports and patches contributed by Silas
-Boyd-Wickizer, Anton Burtsev, Cody Cutler, Mike CAT, Tej Chajed, eyalz800,
-Nelson Elhage, Saar Ettinger, Alice Ferrazzi, Nathaniel Filardo, Peter
-Froehlich, Yakir Goaron,Shivam Handa, Bryan Henry, Jim Huang, Alexander
-Kapshuk, Anders Kaseorg, kehao95, Wolfgang Keller, Eddie Kohler, Austin
-Liew, Imbar Marinescu, Yandong Mao, Matan Shabtay, Hitoshi Mitake, Carmi
-Merimovich, Mark Morrissey, mtasm, Joel Nider, Greg Price, Ayan Shafqat,
-Eldar Sehayek, Yongming Shen, Cam Tenny, tyfkda, Rafael Ubal, Warren
-Toomey, Stephen Tu, Pablo Ventura, Xi Wang, Keiichi Watanabe, Nicolas
-Wolovick, wxdao, Grant Wu, Jindong Zhang, Icenowy Zheng, and Zou Chang Wei.
+---
 
-The code in the files that constitute xv6 is
-Copyright 2006-2018 Frans Kaashoek, Robert Morris, and Russ Cox.
+## 🔍 Key Features
 
-ERROR REPORTS
+- Based on [xv6-public](https://github.com/mit-pdos/xv6-public)
+- Hybrid build system with C and C++ compilation
+- Uses a monolithic kernel model (all code runs in kernel space)
+- Compiles with `g++` in freestanding mode (no standard library)
+- Runs in [QEMU](https://www.qemu.org/) and [Bochs](http://bochs.sourceforge.net/)
 
-We don't process error reports (see note on top of this file).
+---
 
-BUILDING AND RUNNING XV6
+## 🧑‍💻 Building SpinOS
 
-To build xv6 on an x86 ELF machine (like Linux or FreeBSD), run
-"make". On non-x86 or non-ELF machines (like OS X, even on x86), you
-will need to install a cross-compiler gcc suite capable of producing
-x86 ELF binaries (see https://pdos.csail.mit.edu/6.828/).
-Then run "make TOOLPREFIX=i386-jos-elf-". Now install the QEMU PC
-simulator and run "make qemu".
+### Prerequisites
+
+- GCC cross-compiler for `i386` (e.g., `i386-jos-elf-gcc`, `i386-jos-elf-g++`)
+- `make`, `qemu`, `perl`
+
+Install cross-tools on Ubuntu:
+```bash
+sudo apt install gcc-multilib qemu-system-x86 build-essential perl
+````
+
+### Build the kernel image
+
+```bash
+make clean
+make
+```
+
+### Run it in QEMU
+
+```bash
+make qemu
+```
+
+---
+
+## 🏗️ Code Layout
+
+```
+.
+├── boot/           # Bootloader and startup assembly
+├── kernel/         # C++ kernel source files
+├── user/           # User-space applications
+├── Makefile        # Cross-compilation makefile
+├── fs.img          # User program disk image
+└── README.md
+```
+
+---
+
+## 🔧 Porting Notes
+
+* Replaced many `.c` source files with `.cpp` equivalents
+* Disabled C++ exceptions and RTTI (`-fno-exceptions -fno-rtti`)
+* Avoids STL and dynamic memory allocation (except `kalloc`)
+* Boot and linker code remain in C and assembly
+* Added rules in the Makefile to compile `.cpp` files with `g++`
+
+---
+
+## 📜 License
+
+SpinOS is a fork of xv6, which is licensed under the [MIT License](LICENSE). All original xv6 authors and copyright holders are acknowledged.
+
+> You are free to use, modify, and distribute SpinOS under the same license terms.
+
+---
+
+## 🙏 Acknowledgments
+
+* [xv6 by MIT](https://github.com/mit-pdos/xv6-public)
+* The 6.828 Operating Systems Engineering course
+* [OSDev.org](https://wiki.osdev.org/Main_Page) community
+
+---
+
+## 🧠 Future Plans
+
+* Add more C++ features (RAII, templates in device drivers)
+* Isolate subsystems with namespaces
+* Improve testability with mock interfaces
+* Explore user-space in C++
+
+---
+
+## ✉️ Contributing
+
+This is an experimental project. Bug reports, suggestions, and discussions are welcome!
+
+Feel free to fork, star ⭐, or reach out with ideas.
