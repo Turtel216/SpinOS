@@ -157,6 +157,13 @@ _%: %.o $(ULIB)
 	$(OBJDUMP) -S $@ > $*.asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
 
+_%: %.cpp $(ULIB)
+	$(CXX) $(CXXFLAGS) -nostdinc -I. -c $< -o $*.o
+	$(OBJCOPY) --remove-section .note.gnu.property ulib.o
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $*.o $(ULIB)
+	$(OBJDUMP) -S $@ > $*.asm
+	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $*.sym
+
 _forktest: forktest.o $(ULIB)
 	# forktest has less library code linked in - needs to be small
 	# in order to be able to max out the proc table.

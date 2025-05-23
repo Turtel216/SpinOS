@@ -3,7 +3,6 @@
 #include "defs.h"
 #include "memlayout.h"
 #include "mmu.h"
-#include "new.hpp"
 #include "param.h"
 #include "proc.h"
 #include "types.h"

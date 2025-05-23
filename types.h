@@ -4,7 +4,6 @@
 typedef unsigned int uint;
 typedef unsigned short ushort;
 typedef unsigned char uchar;
-typedef unsigned int size_t;
 typedef uint pde_t;
 
 #endif // TYPES_H_
